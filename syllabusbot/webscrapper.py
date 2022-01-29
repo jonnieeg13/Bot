@@ -9,6 +9,8 @@ class Courses(webdriver.Chrome):
         self.teardown = teardown
         os.environ['PATH'] = driver_path
         super(Courses, self).__init__()
+        self.implicitly_wait(15)
+        self.maximize_window()
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         if self.teardown:
