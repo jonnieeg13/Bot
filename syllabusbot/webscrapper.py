@@ -18,4 +18,3 @@ class Courses(webdriver.Chrome):
 
     def land_first_page(self):
         self.get(cons.BASE_URL)
-
