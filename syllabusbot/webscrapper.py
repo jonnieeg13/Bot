@@ -1,5 +1,8 @@
 from selenium import webdriver
 import os
+
+from selenium.webdriver.common.by import By
+
 import syllabusbot.constants as cons
 
 
@@ -18,3 +21,34 @@ class Courses(webdriver.Chrome):
 
     def land_first_page(self):
         self.get(cons.BASE_URL)
+
+    def click_student_btn(self):
+        front_stu_btn = self.find_element(By.ID, cons.FRONT_STUDENT_BTN)
+        front_stu_btn.click()
+
+    def login(self):
+        login_button = self.find_element(By.XPATH, cons.LOGIN_BTN)
+        login_button.click()
+
+    def select_username(self, username):
+        username_field = self.find_element(By.ID, cons.USER_NAME_SELECT_ID)
+        username_field.clear()
+        username_field.send_keys(username)
+
+    def select_username_next(self):
+        username_next = self.find_element(By.ID, cons.USER_NAME_SELECT_NEXT)
+        username_next.click()
+
+    def select_password(self, password):
+        password_field = self.find_element(By.ID, cons.PASSWORD_SELECT_ID)
+        password_field.clear()
+        password_field.send_keys(password)
+
+    # str['CT_PWD_STR_SignIn_Button_Next']
+    def select_password_sign_in(self):
+        password_sign_in = self.find_element(By.XPATH, cons.PASSWORD_SIGNIN_ID)
+        password_sign_in.click()
+
+    def manage_classes_select(self):
+        manage_classes_btn = self.find_element(By.ID, cons.MANAGE_CLASSES)
+        manage_classes_btn.click()
