@@ -1,8 +1,8 @@
 from selenium import webdriver
 import os
-
+from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.common.by import By
-
+from selenium.webdriver.support.ui import WebDriverWait
 import syllabusbot.constants as cons
 
 
@@ -52,3 +52,10 @@ class Courses(webdriver.Chrome):
     def manage_classes_select(self):
         manage_classes_btn = self.find_element(By.ID, cons.MANAGE_CLASSES)
         manage_classes_btn.click()
+
+    def extract_classes(self):
+        course_list = []
+        courses_texts = WebDriverWait(self, 20).until(ec.presence_of_all_elements_located((By.XPATH, cons.COURSE_TEXT)))
+        for course_text in courses_texts:
+            course_list.append(str(course_text.get_attribute("text")))
+        print(course_list)

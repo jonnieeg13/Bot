@@ -1,4 +1,4 @@
-from syllabusbot.webscrapper import Courses
+from syllabusbot.courses import Courses
 import syllabusbot.unconstants as uncons
 
 with Courses() as bot:
@@ -10,4 +10,5 @@ with Courses() as bot:
     bot.select_password(uncons.PASS)
     bot.select_password_sign_in()
     bot.manage_classes_select()
+    bot.extract_classes()
     print('Exiting...')
