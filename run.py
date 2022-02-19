@@ -1,5 +1,6 @@
 from syllabusbot.courses import Courses
 import syllabusbot.unconstants as uncons
+import syllabusbot.constants as cons
 
 try:
     with Courses() as bot:
@@ -11,6 +12,7 @@ try:
         bot.select_password(uncons.PASS)
         bot.select_password_sign_in()
         bot.manage_classes_select()
+        bot.refresh()
         bot.extract_classes()
         print('Exiting...')
 except Exception as e:
@@ -19,8 +21,8 @@ except Exception as e:
             'You are trying to run the bot from command line \n'
             'Please add to PATH your Selenium Drivers \n'
             'Windows: \n'
-            '    set PATH=%PATH%;C:path-to-your-folder \n(Path same as driver_path in course.py) \n \n'
+            f'    set PATH=%PATH%;{cons.DRIVER_PATH} \n \n'
             'Linux: \n'
-            '    PATH=$PATH:/path/toyour/folder/\n(Path same as driver_path in course.py) \n')
+            f'    PATH=$PATH:{cons.DRIVER_PATH}')
     else:
         raise

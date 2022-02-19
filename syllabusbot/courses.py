@@ -7,7 +7,7 @@ import syllabusbot.constants as cons
 
 
 class Courses(webdriver.Chrome):
-    def __init__(self, driver_path=r"C:\chromedriver_win32", teardown=False):
+    def __init__(self, driver_path=cons.DRIVER_PATH, teardown=False):
         self.driver_path = driver_path
         self.teardown = teardown
         os.environ['PATH'] = driver_path
@@ -56,8 +56,21 @@ class Courses(webdriver.Chrome):
         manage_classes_btn.click()
 
     def extract_classes(self):
+        # ALTERNATE WAY TO GET COURSE NAME
+        # course_list = []
+        # courses_texts = WebDriverWait(self, 20).until(ec.presence_of_all_elements_located((By.XPATH, cons.COURSE_TEXT)))
+        # for course_text in courses_texts:
+        #     course_list.append(str(course_text.get_attribute("text")))
+        # print(course_list)
         course_list = []
-        courses_texts = WebDriverWait(self, 20).until(ec.presence_of_all_elements_located((By.XPATH, cons.COURSE_TEXT)))
+        courses_texts_list = WebDriverWait(self, 20).until(
+            ec.presence_of_element_located((By.ID, cons.COURSE_TEXTS_PANEL))
+        )
+        courses_texts = WebDriverWait(courses_texts_list, 20).until(
+            ec.presence_of_all_elements_located((By.CLASS_NAME, cons.COURSE_TEXTS_CLASS))
+        )
         for course_text in courses_texts:
-            course_list.append(str(course_text.get_attribute("text")))
+            course_list.append(
+                str(course_text.find_element(By.CLASS_NAME, cons.INDIVIDUAL_COURSE_CLASS).get_attribute("text"))
+            )
         print(course_list)
