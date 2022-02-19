@@ -11,7 +11,9 @@ class Courses(webdriver.Chrome):
         self.driver_path = driver_path
         self.teardown = teardown
         os.environ['PATH'] = driver_path
-        super(Courses, self).__init__()
+        options = webdriver.ChromeOptions()
+        options.add_experimental_option('excludeSwitches', ['enable-logging'])
+        super(Courses, self).__init__(options=options)
         self.implicitly_wait(15)
         self.maximize_window()
 
