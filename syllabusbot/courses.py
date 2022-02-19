@@ -58,7 +58,9 @@ class Courses(webdriver.Chrome):
     def extract_classes(self):
         # ALTERNATE WAY TO GET COURSE NAME
         # course_list = []
-        # courses_texts = WebDriverWait(self, 20).until(ec.presence_of_all_elements_located((By.XPATH, cons.COURSE_TEXT)))
+        # courses_texts = WebDriverWait(self, 20).until(
+        # ec.presence_of_all_elements_located((By.XPATH, cons.COURSE_TEXT))
+        # )
         # for course_text in courses_texts:
         #     course_list.append(str(course_text.get_attribute("text")))
         # print(course_list)
@@ -71,6 +73,6 @@ class Courses(webdriver.Chrome):
         )
         for course_text in courses_texts:
             course_list.append(
-                str(course_text.find_element(By.CLASS_NAME, cons.INDIVIDUAL_COURSE_CLASS).get_attribute("text"))
+                str(course_text.find_element(By.CLASS_NAME, cons.INDIVIDUAL_COURSE_CLASS).get_attribute("text").strip())
             )
         print(course_list)
