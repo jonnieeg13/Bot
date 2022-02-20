@@ -4,7 +4,7 @@ from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 import syllabusbot.constants as cons
-
+from syllabusbot.parse_course import ParseCourse
 
 class Courses(webdriver.Chrome):
     def __init__(self, driver_path=cons.DRIVER_PATH, teardown=False):
@@ -46,7 +46,6 @@ class Courses(webdriver.Chrome):
         password_field.clear()
         password_field.send_keys(password)
 
-    # str['CT_PWD_STR_SignIn_Button_Next']
     def select_password_sign_in(self):
         password_sign_in = self.find_element(By.XPATH, cons.PASSWORD_SIGNIN_ID)
         password_sign_in.click()
@@ -68,11 +67,5 @@ class Courses(webdriver.Chrome):
         courses_texts_list = WebDriverWait(self, 20).until(
             ec.presence_of_element_located((By.ID, cons.COURSE_TEXTS_PANEL))
         )
-        courses_texts = WebDriverWait(courses_texts_list, 20).until(
-            ec.presence_of_all_elements_located((By.CLASS_NAME, cons.COURSE_TEXTS_CLASS))
-        )
-        for course_text in courses_texts:
-            course_list.append(
-                str(course_text.find_element(By.CLASS_NAME, cons.INDIVIDUAL_COURSE_CLASS).get_attribute("text").strip())
-            )
-        print(course_list)
+        parse = ParseCourse(courses_texts_list)
+        parse.pull_course_names()
