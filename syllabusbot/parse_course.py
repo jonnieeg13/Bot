@@ -7,7 +7,7 @@ from syllabusbot.uta_course_regex import course_regex
 
 
 class ParseCourse:
-    def __init__(self, courses_texts_list:WebElement):
+    def __init__(self, courses_texts_list: WebElement):
         self.courses_texts_list = courses_texts_list
         self.course_names = self.pull_course_box()
 
@@ -27,3 +27,12 @@ class ParseCourse:
         for items in range(len(course_list)):
             course_list[items] = course_regex(course_list[items])
         print(course_list)
+        return course_list
+    # ALTERNATE WAY TO GET COURSE NAME
+    # course_list = []
+    # courses_texts = WebDriverWait(self, 20).until(
+    # ec.presence_of_all_elements_located((By.XPATH, cons.COURSE_TEXT))
+    # )
+    # for course_text in courses_texts:
+    #     course_list.append(str(course_text.get_attribute("text")))
+    # print(course_list)
