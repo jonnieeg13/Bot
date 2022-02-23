@@ -80,3 +80,6 @@ class Courses(webdriver.Chrome):
         filecreator = FileCreator(self.semester_path, parse.pull_course_names())
         filecreator.create_semester_file()
         filecreator.create_course_files()
+
+    def botwait(self):
+        self.implicitly_wait(60)
