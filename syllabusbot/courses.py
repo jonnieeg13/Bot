@@ -11,6 +11,7 @@ from syllabusbot.uta_course_regex import regex_match
 
 class Courses(webdriver.Chrome):
     def __init__(self, driver_path=cons.DRIVER_PATH, teardown=False, semester=""):
+        self.semester_path = self.get_semester()
         self.driver_path = driver_path
         self.teardown = teardown
         os.environ['PATH'] = driver_path
@@ -30,7 +31,10 @@ class Courses(webdriver.Chrome):
             else:
                 break
         result = ' '.join(elem.capitalize() for elem in self.semester.split())
-        print("Semester", result)
+        # print("Semester", result)
+        test = 'G:'
+        path = f'{test}\\{result}'
+        return path
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         if self.teardown:
@@ -74,6 +78,6 @@ class Courses(webdriver.Chrome):
             ec.presence_of_element_located((By.ID, cons.COURSE_TEXTS_PANEL))
         )
         parse = ParseCourse(courses_texts_list)
-        filecreator = FileCreator(self.get_semester(), parse.pull_course_names())
+        filecreator = FileCreator(self.semester_path, parse.pull_course_names())
         filecreator.create_semester_file()
         filecreator.create_course_files()

@@ -1,12 +1,4 @@
-import shutil
 from pathlib import Path
-
-
-def delete_directory(path):
-    try:
-        shutil.rmtree(path)
-    except OSError as e:
-        print("Error: %s - %s." % (e.filename, e.strerror))
 
 
 class FileCreator:
@@ -23,10 +15,3 @@ class FileCreator:
             Path(path).mkdir(parents=False, exist_ok=False)
 
 
-# myList = ['CSE 3302', 'CSE 3330', 'MATH 2326', 'MATH 3330']
-# test = 'G:\\Test'
-# # delete_directory(test)
-# filetest = FileCreator(test, myList)
-# filetest.create_semester_file()
-# filetest.create_course_files()
-# # delete_directory(test)

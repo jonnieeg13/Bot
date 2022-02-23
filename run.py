@@ -2,8 +2,9 @@ from syllabusbot.courses import Courses
 import syllabusbot.unconstants as uncons
 import syllabusbot.constants as cons
 
+
 try:
-    with Courses() as bot:
+    with Courses(teardown=True) as bot:
         bot.land_first_page()
         bot.click_student_btn()
         bot.login()
@@ -14,7 +15,7 @@ try:
         bot.manage_classes_select()
         bot.refresh()
         bot.extract_classes()
-        print('Exiting...')
+        print('Exiting ...')
 except Exception as e:
     if 'in PATH' in str(e):
         print(
