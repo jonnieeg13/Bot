@@ -11,3 +11,4 @@ DRIVER_PATH = r'C:\chromedriver_win32''\\'
 COURSE_TEXTS_PANEL = r'win0divSSR_DER0_CAL_FL_SSR_GRPSFF_FL'
 COURSE_TEXTS_CLASS = r'ps_header-group'
 INDIVIDUAL_COURSE_CLASS = 'ps-link'
+SYLLABUS_FILE_PATH = r"C:\Users\jonni\OneDrive\Syllabus"

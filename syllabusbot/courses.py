@@ -5,17 +5,32 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 import syllabusbot.constants as cons
 from syllabusbot.parse_course import ParseCourse
+from syllabusbot.file_creator import FileCreator
+from syllabusbot.uta_course_regex import regex_match
+
 
 class Courses(webdriver.Chrome):
-    def __init__(self, driver_path=cons.DRIVER_PATH, teardown=False):
+    def __init__(self, driver_path=cons.DRIVER_PATH, teardown=False, semester=""):
         self.driver_path = driver_path
         self.teardown = teardown
         os.environ['PATH'] = driver_path
         options = webdriver.ChromeOptions()
         options.add_experimental_option('excludeSwitches', ['enable-logging'])
+        self.semester = semester
         super(Courses, self).__init__(options=options)
         self.implicitly_wait(15)
         self.maximize_window()
+
+    def get_semester(self):
+        while True:
+            self.semester = input("Enter Semester and Year: ")
+            if not regex_match(self.semester):
+                print('Incorrect Semester Entered')
+                continue
+            else:
+                break
+        result = ' '.join(elem.capitalize() for elem in self.semester.split())
+        print("Semester", result)
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         if self.teardown:
@@ -59,4 +74,6 @@ class Courses(webdriver.Chrome):
             ec.presence_of_element_located((By.ID, cons.COURSE_TEXTS_PANEL))
         )
         parse = ParseCourse(courses_texts_list)
-        parse.pull_course_names()
+        filecreator = FileCreator(self.get_semester(), parse.pull_course_names())
+        filecreator.create_semester_file()
+        filecreator.create_course_files()
