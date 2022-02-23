@@ -13,5 +13,3 @@ class FileCreator:
         for files in self.course_file_names:
             path = f'{self.semester_name}\\{files}'
             Path(path).mkdir(parents=False, exist_ok=False)
-
-

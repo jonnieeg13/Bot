@@ -8,5 +8,5 @@ def delete_directory(path):
         print("Error: %s - %s." % (e.filename, e.strerror))
 
 
-file_to_delete = r'G:\Fall 2021'
+file_to_delete = r'C:\Users\jonni\OneDrive\Syllabus\Spring 2025'
 delete_directory(file_to_delete)

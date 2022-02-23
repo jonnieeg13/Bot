@@ -32,8 +32,7 @@ class Courses(webdriver.Chrome):
                 break
         result = ' '.join(elem.capitalize() for elem in self.semester.split())
         # print("Semester", result)
-        test = 'G:'
-        path = f'{test}\\{result}'
+        path = f'{cons.SYLLABUS_FILE_PATH}\\{result}'
         return path
 
     def __exit__(self, exc_type, exc_val, exc_tb):
