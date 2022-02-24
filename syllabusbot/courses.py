@@ -7,6 +7,7 @@ import syllabusbot.constants as cons
 from syllabusbot.parse_course import ParseCourse
 from syllabusbot.file_creator import FileCreator
 from syllabusbot.uta_course_regex import regex_match
+import click
 
 
 class Courses(webdriver.Chrome):
@@ -20,7 +21,7 @@ class Courses(webdriver.Chrome):
         self.semester = semester
         super(Courses, self).__init__(options=options)
         self.implicitly_wait(15)
-        self.maximize_window()
+        # self.maximize_window()
 
     def get_semester(self):
         while True:
@@ -31,7 +32,6 @@ class Courses(webdriver.Chrome):
             else:
                 break
         result = ' '.join(elem.capitalize() for elem in self.semester.split())
-        # print("Semester", result)
         path = f'{cons.SYLLABUS_FILE_PATH}\\{result}'
         return path
 
@@ -77,9 +77,17 @@ class Courses(webdriver.Chrome):
             ec.presence_of_element_located((By.ID, cons.COURSE_TEXTS_PANEL))
         )
         parse = ParseCourse(courses_texts_list)
-        filecreator = FileCreator(self.semester_path, parse.pull_course_names())
-        filecreator.create_semester_file()
-        filecreator.create_course_files()
+        course_names = parse.pull_course_names()
+        if click.confirm(
+            f"Semester while be in Path: {self.semester_path}\n" +
+            f"Making Sub-folders from list: {course_names}\n" +
+            "Do you want to Continue?", default=True
+        ):
+            filecreator = FileCreator(self.semester_path, course_names)
+            filecreator.create_semester_file()
+            filecreator.create_course_files()
+        else:
+            self.teardown = True
 
     def bot_wait(self):
         self.implicitly_wait(60)
