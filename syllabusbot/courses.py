@@ -81,5 +81,5 @@ class Courses(webdriver.Chrome):
         filecreator.create_semester_file()
         filecreator.create_course_files()
 
-    def botwait(self):
+    def bot_wait(self):
         self.implicitly_wait(60)

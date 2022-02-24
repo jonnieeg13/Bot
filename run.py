@@ -12,7 +12,7 @@ try:
         bot.select_username_next()
         bot.select_password(uncons.PASS)
         bot.select_password_sign_in()
-        bot.botwait()
+        bot.bot_wait()
         bot.manage_classes_select()
         bot.refresh()
         bot.extract_classes()
