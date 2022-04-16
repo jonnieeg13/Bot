@@ -26,7 +26,7 @@ class ParseCourse:
         # print(course_list)
         for items in range(len(course_list)):
             course_list[items] = course_regex(course_list[items])
-        # print(course_list)
+        print(course_list)
         return course_list
     # ALTERNATE WAY TO GET COURSE NAME
     # course_list = []

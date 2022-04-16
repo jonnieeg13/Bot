@@ -1,27 +1,44 @@
+import chromedriver_autoinstaller
 from selenium import webdriver
 import os
 from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.common.action_chains import ActionChains
 import syllabusbot.constants as cons
 from syllabusbot.parse_course import ParseCourse
 from syllabusbot.file_creator import FileCreator
 from syllabusbot.uta_course_regex import regex_match
 import click
 
+chromedriver_autoinstaller.install(path=cons.DRIVER_PATH)
+
 
 class Courses(webdriver.Chrome):
-    def __init__(self, driver_path=cons.DRIVER_PATH, teardown=False, semester=""):
-        self.semester_path = self.get_semester()
+    def __init__(self, driver_path=cons.DRIVER_PATH, teardown=False):
+        self.semester = self.get_semester()
+        self.semester_path = self.semester_path(self.semester)
         self.driver_path = driver_path
         self.teardown = teardown
         os.environ['PATH'] = driver_path
         options = webdriver.ChromeOptions()
         options.add_experimental_option('excludeSwitches', ['enable-logging'])
-        self.semester = semester
+        self.swapped_semester = self.swap_semesters(self.semester)
         super(Courses, self).__init__(options=options)
         self.implicitly_wait(15)
         # self.maximize_window()
+
+    @staticmethod
+    def swap_semesters(season_year):
+        first = season_year
+        space = first.find(' ')
+        return (first[space:] + " " + first[:space]).lstrip()
+
+    @staticmethod
+    def semester_path(season_year):
+        result = ' '.join(elem.capitalize() for elem in season_year.split())
+        path = f'{cons.SYLLABUS_FILE_PATH}\\{result}'
+        return path
 
     def get_semester(self):
         while True:
@@ -31,9 +48,7 @@ class Courses(webdriver.Chrome):
                 continue
             else:
                 break
-        result = ' '.join(elem.capitalize() for elem in self.semester.split())
-        path = f'{cons.SYLLABUS_FILE_PATH}\\{result}'
-        return path
+        return self.semester
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         if self.teardown:
@@ -71,6 +86,17 @@ class Courses(webdriver.Chrome):
     def manage_classes_select(self):
         manage_classes_btn = self.find_element(By.ID, cons.MANAGE_CLASSES)
         manage_classes_btn.click()
+        semester_xpath = f"//a[contains(text(),'{self.swapped_semester}')]"
+        # semester_button = self.find_element(By.XPATH, semester_xpath)
+        self.implicitly_wait(30)
+        semester_button = WebDriverWait(self, 20).until(
+            ec.element_to_be_clickable((By.XPATH, semester_xpath))
+        )
+        # actions = ActionChains(self)
+        # actions.move_to_element(semester_button).click().perform()
+        # self.execute_script("arguments[0].scrollIntoView();", semester_button)
+        # self.execute_script('arguments[0].click()', semester_button)
+        semester_button.click()
 
     def extract_classes(self):
         courses_texts_list = WebDriverWait(self, 20).until(
@@ -78,16 +104,16 @@ class Courses(webdriver.Chrome):
         )
         parse = ParseCourse(courses_texts_list)
         course_names = parse.pull_course_names()
-        if click.confirm(
-            f"Semester while be in Path: {self.semester_path}\n" +
-            f"Making Sub-folders from list: {course_names}\n" +
-            "Do you want to Continue?", default=True
-        ):
-            filecreator = FileCreator(self.semester_path, course_names)
-            filecreator.create_semester_file()
-            filecreator.create_course_files()
-        else:
-            self.teardown = True
+        # if click.confirm(
+        #     f"Semester while be in Path: {self.semester_path}\n" +
+        #     f"Making Sub-folders from list: {course_names}\n" +
+        #     "Do you want to Continue?", default=True
+        # ):
+        #     filecreator = FileCreator(self.semester_path, course_names)
+        #     filecreator.create_semester_file()
+        #     filecreator.create_course_files()
+        # else:
+        #     self.teardown = True
 
     def bot_wait(self):
         self.implicitly_wait(60)

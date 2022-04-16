@@ -4,7 +4,7 @@ import syllabusbot.constants as cons
 
 
 try:
-    with Courses(teardown=True) as bot:
+    with Courses() as bot:
         bot.land_first_page()
         bot.click_student_btn()
         bot.login()
@@ -14,7 +14,7 @@ try:
         bot.select_password_sign_in()
         bot.bot_wait()
         bot.manage_classes_select()
-        bot.refresh()
+        # bot.refresh()
         bot.extract_classes()
         print('Exiting ...')
 except Exception as e:
