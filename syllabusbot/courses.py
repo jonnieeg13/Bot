@@ -4,11 +4,12 @@ import os
 from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.common.action_chains import ActionChains
+# from selenium.webdriver.common.action_chains import ActionChains
 import syllabusbot.constants as cons
 from syllabusbot.parse_course import ParseCourse
 from syllabusbot.file_creator import FileCreator
 from syllabusbot.uta_course_regex import regex_match
+from tkinter import filedialog as fd
 import click
 
 chromedriver_autoinstaller.install(path=cons.DRIVER_PATH)
@@ -23,16 +24,16 @@ class Courses(webdriver.Chrome):
         os.environ['PATH'] = driver_path
         options = webdriver.ChromeOptions()
         options.add_experimental_option('excludeSwitches', ['enable-logging'])
-        self.swapped_semester = self.swap_semesters(self.semester)
+        # self.swapped_semester = self.swap_semesters(self.semester)
         super(Courses, self).__init__(options=options)
         self.implicitly_wait(15)
         # self.maximize_window()
 
-    @staticmethod
-    def swap_semesters(season_year):
-        first = season_year
-        space = first.find(' ')
-        return (first[space:] + " " + first[:space]).lstrip()
+    # @staticmethod
+    # def swap_semesters(season_year):
+    #     first = season_year
+    #     space = first.find(' ')
+    #     return (first[space:] + " " + first[:space]).lstrip()
 
     @staticmethod
     def semester_path(season_year):
