@@ -87,7 +87,7 @@ class Courses(webdriver.Chrome):
     def manage_classes_select(self):
         manage_classes_btn = self.find_element(By.ID, cons.MANAGE_CLASSES)
         manage_classes_btn.click()
-        semester_xpath = f"//a[contains(text(),'{self.swapped_semester}')]"
+        semester_xpath = f"//a[contains(text(),'{self.semester}')]"
         # semester_button = self.find_element(By.XPATH, semester_xpath)
         self.implicitly_wait(30)
         semester_button = WebDriverWait(self, 20).until(
