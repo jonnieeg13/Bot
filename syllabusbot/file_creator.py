@@ -1,5 +1,6 @@
 from pathlib import Path
-
+from syllabusbot.syllabus import get_syllabus_links
+import requests
 
 class FileCreator:
     def __init__(self, semester_name, course_file_names):

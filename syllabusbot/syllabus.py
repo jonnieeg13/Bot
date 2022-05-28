@@ -13,6 +13,7 @@ class MyHTMLParser(HTMLParser):
             class_list = []
         self.class_list = class_list
         super().__init__()
+        self.url_data_list = []
 
     def handle_starttag(self, tag, attrs):
         # Only parse the 'anchor' tag.
@@ -23,11 +24,12 @@ class MyHTMLParser(HTMLParser):
                 # if name == "href":
                 for classes in self.class_list:
                     if name == "href" and re.search(classes, value):
-                        print(name, "=", value)
+                        # print(name, "=", value)
+                        self.url_data_list.append(value)
 
 
 def get_syllabus_links(class_list):
-
+    url_list = []
     dotenv.load_dotenv(dotenv.find_dotenv())
     token = os.environ.get('CANVAS_API_TOKEN')
     baseurl = 'https://uta.instructure.com'
@@ -47,6 +49,10 @@ def get_syllabus_links(class_list):
     parser = MyHTMLParser(regex_modified_list)
     for s in syl:
         parser.feed(s)
+        url_list = parser.url_data_list
+    return url_list
 
 
-get_syllabus_links(myList)
+download_link_List = get_syllabus_links(myList)
+for link in download_link_List:
+    print(link)
