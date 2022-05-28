@@ -67,11 +67,8 @@ def get_syllabus_links(class_list):
         # url_list = parser.url_data_list
         # # string implementation
         url_string = parser.url_data_string
-    split_name = url_string.split("/")
-    file_name = split_name[-1]
-    split_file_type = file_name.split(".")
-    file_type = "." + split_file_type[-1]
-    return url_string, file_type
+    return url_string
+
 
 # # # TESTER
 # myList = ['CSE 3330', 'CSE 3302', 'MATH 3330', 'MATH 2326']
@@ -79,5 +76,8 @@ def get_syllabus_links(class_list):
 # download_link_List = get_syllabus_links(myList)
 # for link in download_link_List:
 #     print(link)
-# download_link_string, file_ext = get_syllabus_links(myList[0])
-# print(download_link_string, file_ext)
+# download_link_string, file_ext = get_syllabus_links(myList[1])
+# response = requests.get(download_link_string)
+# content_type = response.headers['content-type']
+# extension = mimetypes.guess_extension(content_type)
+# print(download_link_string, file_ext, extension)

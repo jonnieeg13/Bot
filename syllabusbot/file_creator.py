@@ -1,3 +1,4 @@
+import mimetypes
 from pathlib import Path
 from syllabusbot.syllabus import get_syllabus_links
 import requests
@@ -14,13 +15,16 @@ class FileCreator:
         for files in self.course_file_names:
             path = os.path.join(self.semester_name, files)
             Path(path).mkdir(parents=False, exist_ok=False)
-            download_link_string, file_type = get_syllabus_links(files)
+            download_link_string = get_syllabus_links(files)
             response = requests.get(download_link_string)
-            syllabus_string = files + ' ' + "SYLLABUS" + ' ' + file_type
+            content_type = response.headers['content-type']
+            extension = mimetypes.guess_extension(content_type)
+            syllabus_string = files + ' ' + "SYLLABUS" + ' ' + extension
             download_file = os.path.join(path, syllabus_string)
             with open(download_file, "wb") as download:
                 download.write(response.content)
             print(f"{files} Directory and Syllabus Written")
+
 
 # # # TESTER
 # test_directory = r"C:\Users\jonni\Test Semester"
