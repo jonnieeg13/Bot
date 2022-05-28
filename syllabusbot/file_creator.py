@@ -24,10 +24,3 @@ class FileCreator:
             with open(download_file, "wb") as download:
                 download.write(response.content)
             print(f"{files} Directory and Syllabus Written")
-
-
-# # # TESTER
-# test_directory = r"C:\Users\jonni\Test Semester"
-# myList = ['CSE 3330', 'CSE 3302', 'MATH 3330', 'MATH 2326']
-# file_creator = FileCreator(test_directory, myList)
-# file_creator.create_course_files()

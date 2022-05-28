@@ -9,7 +9,6 @@ import syllabusbot.constants as cons
 from syllabusbot.parse_course import ParseCourse
 from syllabusbot.file_creator import FileCreator
 from syllabusbot.uta_course_regex import regex_match
-from tkinter import filedialog as fd
 import click
 
 chromedriver_autoinstaller.install(path=cons.DRIVER_PATH)
@@ -37,8 +36,9 @@ class Courses(webdriver.Chrome):
 
     @staticmethod
     def semester_path(season_year):
-        result = ' '.join(elem.capitalize() for elem in season_year.split())
-        path = f'{cons.SYLLABUS_FILE_PATH}\\{result}'
+        formatted_season_year = ' '.join(elem.capitalize() for elem in season_year.split())
+        # path = f'{cons.SYLLABUS_FILE_PATH}\\{result}'
+        path = os.path.join("Enter Something HERE from database", formatted_season_year)
         return path
 
     def get_semester(self):
