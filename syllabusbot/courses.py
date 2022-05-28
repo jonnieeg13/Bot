@@ -111,7 +111,6 @@ class Courses(webdriver.Chrome):
         #     "Do you want to Continue?", default=True
         # ):
         #     filecreator = FileCreator(self.semester_path, course_names)
-        #     filecreator.create_semester_file()
         #     filecreator.create_course_files()
         # else:
         #     self.teardown = True
