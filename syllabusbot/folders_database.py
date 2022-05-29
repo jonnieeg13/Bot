@@ -2,12 +2,14 @@ import os
 import sqlite3
 import platform
 import sys
-from tkinter import filedialog as fd
+from syllabusbot.file_dialog import GuiSelectFolder
 
 
 def get_top_directory():
     print("Select the folder you want to store the folders of classes under")
-    input_folder = fd.askopenfilename()
+    gui_folder_selector = GuiSelectFolder()
+    gui_folder_selector.mainloop()
+    input_folder = gui_folder_selector.get_folder_name()
     if not input_folder:
         print("No folder Chosen")
         sys.exit()
@@ -34,4 +36,5 @@ def return_filepath(database_directory):
     return filepath
 
 
-
+# test = get_top_directory()
+# print(test)
