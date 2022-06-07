@@ -9,13 +9,20 @@ import syllabusbot.constants as cons
 from syllabusbot.parse_course import ParseCourse
 from syllabusbot.file_creator import FileCreator
 from syllabusbot.uta_course_regex import regex_match
+from syllabusbot.folders_database import return_filepath
 import click
-
+from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.chrome.service import Service
+driver = webdriver.Chrome(ChromeDriverManager().install())
+# driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
 chromedriver_autoinstaller.install(path=cons.DRIVER_PATH)
 
 
 class Courses(webdriver.Chrome):
+# class Courses(driver):
+
     def __init__(self, driver_path=cons.DRIVER_PATH, teardown=False):
+    # def __init__(self, driver_path=driver, teardown=False):
         self.semester = self.get_semester()
         self.semester_path = self.semester_path(self.semester)
         self.driver_path = driver_path
@@ -28,22 +35,16 @@ class Courses(webdriver.Chrome):
         self.implicitly_wait(15)
         # self.maximize_window()
 
-    # @staticmethod
-    # def swap_semesters(season_year):
-    #     first = season_year
-    #     space = first.find(' ')
-    #     return (first[space:] + " " + first[:space]).lstrip()
-
     @staticmethod
     def semester_path(season_year):
         formatted_season_year = ' '.join(elem.capitalize() for elem in season_year.split())
-        # path = f'{cons.SYLLABUS_FILE_PATH}\\{result}'
-        path = os.path.join("Enter Something HERE from database", formatted_season_year)
+        top_folder_name = return_filepath()
+        path = os.path.join(top_folder_name, formatted_season_year)
         return path
 
     def get_semester(self):
         while True:
-            self.semester = input("Enter Semester and Year: ")
+            self.semester = input("Enter Year and Semester: ")
             if not regex_match(self.semester):
                 print('Incorrect Semester Entered')
                 continue
@@ -105,15 +106,15 @@ class Courses(webdriver.Chrome):
         )
         parse = ParseCourse(courses_texts_list)
         course_names = parse.pull_course_names()
-        # if click.confirm(
-        #     f"Semester while be in Path: {self.semester_path}\n" +
-        #     f"Making Sub-folders from list: {course_names}\n" +
-        #     "Do you want to Continue?", default=True
-        # ):
-        #     filecreator = FileCreator(self.semester_path, course_names)
-        #     filecreator.create_course_files()
-        # else:
-        #     self.teardown = True
+        if click.confirm(
+            f"Semester while be in Path: {self.semester_path}\n" +
+            f"Making Sub-folders from list: {course_names}\n" +
+            "Do you want to Continue?", default=True
+        ):
+            filecreator = FileCreator(self.semester_path, course_names)
+            filecreator.create_course_files()
+        else:
+            self.teardown = True
 
     def bot_wait(self):
         self.implicitly_wait(60)
