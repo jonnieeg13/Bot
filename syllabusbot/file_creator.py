@@ -16,11 +16,15 @@ class FileCreator:
             path = os.path.join(self.semester_name, files)
             Path(path).mkdir(parents=False, exist_ok=False)
             download_link_string = get_syllabus_links(files)
-            response = requests.get(download_link_string)
-            content_type = response.headers['content-type']
-            extension = mimetypes.guess_extension(content_type)
-            syllabus_string = files + ' ' + "SYLLABUS" + ' ' + extension
-            download_file = os.path.join(path, syllabus_string)
-            with open(download_file, "wb") as download:
-                download.write(response.content)
-            print(f"{files} Directory and Syllabus Written")
+            if download_link_string:
+                response = requests.get(download_link_string)
+                content_type = response.headers['content-type']
+                extension = mimetypes.guess_extension(content_type)
+                syllabus_string = files + ' ' + "SYLLABUS" + ' ' + extension
+                download_file = os.path.join(path, syllabus_string)
+                with open(download_file, "wb") as download:
+                    download.write(response.content)
+                print(f"{files} Directory and Syllabus Written")
+            else:
+                print(f"No syllabus link for {files}")
+                print(f"{files} Directory Written")
