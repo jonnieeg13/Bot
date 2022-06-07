@@ -23,8 +23,6 @@ class ParseCourse:
             course_list.append(
                 str(course_text.find_element(By.CLASS_NAME, cons.INDIVIDUAL_COURSE_CLASS).get_attribute("text").strip())
             )
-        # print(course_list)
         for items in range(len(course_list)):
             course_list[items] = course_regex(course_list[items])
-        print(course_list)
         return course_list

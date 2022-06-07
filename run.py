@@ -4,7 +4,7 @@ import syllabusbot.constants as cons
 
 
 try:
-    with Courses() as bot:
+    with Courses(teardown=True) as bot:
         bot.land_first_page()
         bot.click_student_btn()
         bot.login()

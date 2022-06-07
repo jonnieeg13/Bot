@@ -61,7 +61,7 @@ def return_filepath():
                     conn.commit()
                 else:
                     if not click.confirm(
-                        f"The Path that's on the DB is {os_path[0]}\n" +
+                        f"The current folder semester courses are saved to is: {os_path[0]}\n" +
                         "Would You Like Keep it?", default=True
                     ):
                         top_folder_filepath = get_top_directory()

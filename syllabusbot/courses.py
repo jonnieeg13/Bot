@@ -1,39 +1,27 @@
-import chromedriver_autoinstaller
 from selenium import webdriver
 import os
 from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
-# from selenium.webdriver.common.action_chains import ActionChains
+from webdriver_manager.chrome import ChromeDriverManager
 import syllabusbot.constants as cons
 from syllabusbot.parse_course import ParseCourse
 from syllabusbot.file_creator import FileCreator
 from syllabusbot.uta_course_regex import regex_match
 from syllabusbot.folders_database import return_filepath
 import click
-from webdriver_manager.chrome import ChromeDriverManager
-from selenium.webdriver.chrome.service import Service
-driver = webdriver.Chrome(ChromeDriverManager().install())
-# driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
-chromedriver_autoinstaller.install(path=cons.DRIVER_PATH)
 
 
 class Courses(webdriver.Chrome):
-# class Courses(driver):
 
-    def __init__(self, driver_path=cons.DRIVER_PATH, teardown=False):
-    # def __init__(self, driver_path=driver, teardown=False):
+    def __init__(self, teardown=False):
         self.semester = self.get_semester()
         self.semester_path = self.semester_path(self.semester)
-        self.driver_path = driver_path
         self.teardown = teardown
-        os.environ['PATH'] = driver_path
         options = webdriver.ChromeOptions()
         options.add_experimental_option('excludeSwitches', ['enable-logging'])
-        # self.swapped_semester = self.swap_semesters(self.semester)
-        super(Courses, self).__init__(options=options)
+        super(Courses, self).__init__(executable_path=ChromeDriverManager().install(), options=options)
         self.implicitly_wait(15)
-        # self.maximize_window()
 
     @staticmethod
     def semester_path(season_year):
@@ -89,15 +77,10 @@ class Courses(webdriver.Chrome):
         manage_classes_btn = self.find_element(By.ID, cons.MANAGE_CLASSES)
         manage_classes_btn.click()
         semester_xpath = f"//a[contains(text(),'{self.semester}')]"
-        # semester_button = self.find_element(By.XPATH, semester_xpath)
         self.implicitly_wait(30)
         semester_button = WebDriverWait(self, 20).until(
             ec.element_to_be_clickable((By.XPATH, semester_xpath))
         )
-        # actions = ActionChains(self)
-        # actions.move_to_element(semester_button).click().perform()
-        # self.execute_script("arguments[0].scrollIntoView();", semester_button)
-        # self.execute_script('arguments[0].click()', semester_button)
         semester_button.click()
 
     def extract_classes(self):
@@ -107,12 +90,15 @@ class Courses(webdriver.Chrome):
         parse = ParseCourse(courses_texts_list)
         course_names = parse.pull_course_names()
         if click.confirm(
-            f"Semester while be in Path: {self.semester_path}\n" +
-            f"Making Sub-folders from list: {course_names}\n" +
+            f"Semester courses will be saved to: {self.semester_path}\n" +
+            f"Making sub-folders from list: {course_names}\n" +
             "Do you want to Continue?", default=True
         ):
-            filecreator = FileCreator(self.semester_path, course_names)
-            filecreator.create_course_files()
+            try:
+                file_creator = FileCreator(self.semester_path, course_names)
+                file_creator.create_course_files()
+            except FileExistsError as e:
+                print(e)
         else:
             self.teardown = True
 
