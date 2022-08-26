@@ -9,6 +9,7 @@ from syllabusbot.parse_course import ParseCourse
 from syllabusbot.file_creator import FileCreator
 from syllabusbot.uta_course_regex import regex_match
 from syllabusbot.folders_database import return_filepath
+from selenium.common.exceptions import NoSuchElementException, TimeoutException
 import click
 
 
@@ -73,15 +74,28 @@ class Courses(webdriver.Chrome):
         password_sign_in = self.find_element(By.XPATH, cons.PASSWORD_SIGNIN_ID)
         password_sign_in.click()
 
+    def check_exists_by_xpath(self, xpath):
+        try:
+            semester_button = WebDriverWait(self, 20).until(ec.element_to_be_clickable((By.XPATH, xpath)))
+        except TimeoutException:
+            return None, False
+        return semester_button, True
+
     def manage_classes_select(self):
         manage_classes_btn = self.find_element(By.ID, cons.MANAGE_CLASSES)
         manage_classes_btn.click()
+        # test_click = r"PS_TEAM_LEARNING_L_FL$6"
+        # manage_classes_btn = self.find_element(By.ID, test_click)
+        # manage_classes_btn.click()
+        # view_grades_click = r"win5divPTGP_STEP_DVW_PTGP_STEP_BTN_GB$1"
+        # view_grades = WebDriverWait(self, 20).until(
+        #     ec.presence_of_element_located((By.ID, view_grades_click))
+        # )
+        # view_grades.click()
         semester_xpath = f"//a[contains(text(),'{self.semester}')]"
-        self.implicitly_wait(30)
-        semester_button = WebDriverWait(self, 20).until(
-            ec.element_to_be_clickable((By.XPATH, semester_xpath))
-        )
-        semester_button.click()
+        semester_button, semester_list_found = self.check_exists_by_xpath(semester_xpath)
+        if semester_list_found:
+            semester_button.click()
 
     def extract_classes(self):
         courses_texts_list = WebDriverWait(self, 20).until(
@@ -90,9 +104,9 @@ class Courses(webdriver.Chrome):
         parse = ParseCourse(courses_texts_list)
         course_names = parse.pull_course_names()
         if click.confirm(
-            f"Semester courses will be saved to: {self.semester_path}\n" +
-            f"Making sub-folders from list: {course_names}\n" +
-            "Do you want to Continue?", default=True
+                f"Semester courses will be saved to: {self.semester_path}\n" +
+                f"Making sub-folders from list: {course_names}\n" +
+                "Do you want to Continue?", default=True
         ):
             try:
                 file_creator = FileCreator(self.semester_path, course_names)
