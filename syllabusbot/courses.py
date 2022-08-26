@@ -84,14 +84,6 @@ class Courses(webdriver.Chrome):
     def manage_classes_select(self):
         manage_classes_btn = self.find_element(By.ID, cons.MANAGE_CLASSES)
         manage_classes_btn.click()
-        # test_click = r"PS_TEAM_LEARNING_L_FL$6"
-        # manage_classes_btn = self.find_element(By.ID, test_click)
-        # manage_classes_btn.click()
-        # view_grades_click = r"win5divPTGP_STEP_DVW_PTGP_STEP_BTN_GB$1"
-        # view_grades = WebDriverWait(self, 20).until(
-        #     ec.presence_of_element_located((By.ID, view_grades_click))
-        # )
-        # view_grades.click()
         semester_xpath = f"//a[contains(text(),'{self.semester}')]"
         semester_button, semester_list_found = self.check_exists_by_xpath(semester_xpath)
         if semester_list_found:
