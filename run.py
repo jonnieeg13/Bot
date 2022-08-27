@@ -1,7 +1,5 @@
 from syllabusbot.courses import Courses
 import syllabusbot.unconstants as uncons
-import syllabusbot.constants as cons
-
 
 try:
     with Courses(teardown=True) as bot:
@@ -18,13 +16,4 @@ try:
         bot.extract_classes()
         print('Exiting ...')
 except Exception as e:
-    if 'in PATH' in str(e):
-        print(
-            'You are trying to run the bot from command line \n'
-            'Please add to PATH your Selenium Drivers \n'
-            'Windows: \n'
-            f'    set PATH=%PATH%;{cons.DRIVER_PATH} \n \n'
-            'Linux: \n'
-            f'    PATH=$PATH:{cons.DRIVER_PATH}')
-    else:
-        raise
+    raise
