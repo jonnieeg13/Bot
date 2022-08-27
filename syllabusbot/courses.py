@@ -9,7 +9,7 @@ from syllabusbot.parse_course import ParseCourse
 from syllabusbot.file_creator import FileCreator
 from syllabusbot.uta_course_regex import regex_match
 from syllabusbot.folders_database import return_filepath
-from selenium.common.exceptions import NoSuchElementException, TimeoutException
+from selenium.common.exceptions import TimeoutException
 import click
 
 
