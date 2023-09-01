@@ -3,7 +3,7 @@ import os
 from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
-from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.chrome.service import Service
 import syllabusbot.constants as cons
 from syllabusbot.parse_course import ParseCourse
 from syllabusbot.file_creator import FileCreator
@@ -20,8 +20,9 @@ class Courses(webdriver.Chrome):
         self.semester_path = self.semester_path(self.semester)
         self.teardown = teardown
         options = webdriver.ChromeOptions()
+        service = Service()
         options.add_experimental_option('excludeSwitches', ['enable-logging'])
-        super(Courses, self).__init__(executable_path=ChromeDriverManager().install(), options=options)
+        super(Courses, self).__init__(service=service, options=options)
         self.implicitly_wait(15)
 
     @staticmethod
