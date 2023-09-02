@@ -106,8 +106,6 @@ class Courses(webdriver.Chrome):
                 file_creator.create_course_files()
             except FileExistsError as e:
                 print(e)
-        else:
-            self.teardown = True
 
     def bot_wait(self):
-        self.implicitly_wait(60)
+        self.implicitly_wait(15)
